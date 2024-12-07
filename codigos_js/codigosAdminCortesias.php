@@ -3,6 +3,7 @@
 	var objetosBD ={};
 	var quantidadeItens = {};
 	var elementos = {};
+	// 
 	var body = sessionStorage.getItem('carregaBodyCortesia');
 	var fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 	

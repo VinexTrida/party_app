@@ -3,6 +3,7 @@
 	var usuariosBD ={};
 	var selecionado;
 	usuarios();
+	// Função que cria um objeto com os valores da tabela de usuarios do banco de dados
 	function usuarios() {
 		$.ajax({
 			url: '../conexoes_bd/usuariosBD.php',
@@ -15,6 +16,7 @@
 		});
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Função que cria as divs da página
 	function criaPagina(){
 		for (var nome in usuariosBD) {
 			var container = document.getElementById("usuarios");;
@@ -40,11 +42,13 @@
 	}
 
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Função que é chamada pelo botão de alterar o caixa vinculado ao operador
 	function atualizaCaixa(nome){
 		selecionado = nome;
 		mostraAtualizaCaixa(1);
 	}
 	
+	// Função chamada pelo botão de confirmação, que atualiza o caixa vinculado ao operador
 	function atualizarOperador(){
 		var caixa = document.getElementById('caixaNovoOperador').value;
 		if(caixa >= 1){
@@ -55,6 +59,7 @@
 		}
 	}
 	
+	// Função que grava no banco de dados o novo caixa do operador
 	function cadastroCaixa(nome, caixa){
 		$.ajax({
 			url: '../conexoes_bd/atualizaCaixa.php',
@@ -67,6 +72,7 @@
 		});
 	}
 	
+	// Função que mostra a div onde vai as informações para alterar o caixa vinculado ao operador
 	function mostraAtualizaCaixa(recebido){
 		if(recebido === 1){
 			document.getElementById('usuarios').style.display = 'none';
@@ -83,7 +89,8 @@
 		}
 	}
 	
-//-----------------------------------------------------------------------------------------------------------------------------//	
+//-----------------------------------------------------------------------------------------------------------------------------//
+	// Função chamada pelo botão de confirmação, que cria um novo usuario (FUNÇÃO DESATIVADA) 
 	function realizarCadastro(recebido){
 		var nome = document.getElementById('nomeOperador').value;
 		var caixa = document.getElementById('caixaOperador').value;
@@ -95,6 +102,7 @@
 		}
 	}
 	
+	// Função que grava no banco de dados as informações do novo operador (FUNÇÃO DESATIVADA)
 	function cadastroBanco(nome, caixa) {
 		$.ajax({
 			url: '../conexoes_bd/cadastroUsuarios.php',
@@ -107,6 +115,7 @@
 		});
 	}
 	
+	// Função que mostra a div onde vai as informações para cadastrar um novo usuario (FUNÇÃO DESATIVADA)
 	function adicionarOperador(recebido){
 		if(recebido === 1){
 			document.getElementById('usuarios').style.display = 'none';
@@ -124,25 +133,28 @@
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
 	var listaOperadores;
+	// Função que cria as opções, com base em consulta prévia ao banco de dados, para o input de seleção que defini o operador que será removido (FUNÇÃO DESATIVADA)
 	function criaListaOperadores(){
 		var container = document.getElementById('listaOperadores');
 	    	for (var nome in usuariosBD) {
-			if (usuariosBD.hasOwnProperty(nome)) {
-				var optionUsuarios = document.createElement('option');
-				optionUsuarios.value = nome;
-           			optionUsuarios.id = nome;
+				if (usuariosBD.hasOwnProperty(nome)) {
+					var optionUsuarios = document.createElement('option');
+					optionUsuarios.value = nome;
+					optionUsuarios.id = nome;
 
-				container.appendChild(optionUsuarios);
-			}
+					container.appendChild(optionUsuarios);
+				}
 	    	}
 	}
 	
+	// Função chamada pelo botão de confirmação, que remove um usuario (FUNÇÃO DESATIVADA) 
 	function realizarRemover(){
 		var nome = document.getElementById('nomeRemover').value;
 		removeBanco(nome);
 		excluirOperador(0);
 	}
 	
+	// Função que remove da tabela usuarios do banco de dados o usuario selecionado (FUNÇÃO DESATIVADA)
 	function removeBanco(nome){
 		$.ajax({
 			url: '../conexoes_bd/removeUsuario.php',
@@ -155,6 +167,7 @@
 		});
 	}
 	
+	// Função que mostra a div onde vai as informações para remover um usuario (FUNÇÃO DESATIVADA)
 	function excluirOperador(recebido){
 		if(recebido === 1){
 			document.getElementById('usuarios').style.display = 'none';

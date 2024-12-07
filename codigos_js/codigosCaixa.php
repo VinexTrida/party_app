@@ -4,9 +4,10 @@
 	var quantidadeItens = {};
 	var elementos = {};
 	var conta = 0;
-	var body = sessionStorage.getItem('carregaBody');
-	var fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+	var body = sessionStorage.getItem('carregaBody'); // Quando o usuario não finaliza a venda e vem da tela de finalizar para a do caixa, ele pega a pagina salva no carregabody para que a lista de compras seja recuperada
+	var fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }); // Isso cria uma variavel para formatar os números no padrão monetário brasileiro (R$0,00)
 	
+	// Esse bloco analisa se é o usuario administrador, se n for, remove os menus de configurações
 	administrador(<?php echo $_SESSION['admin']?>);
 	function administrador(recebido){
 		if(recebido === 0){
@@ -14,6 +15,7 @@
 		}
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//	
+	// Busca do banco de dados um objeto com todas as informações dos produtos
 	objetos();
 	setInterval(objetos, 1000);
 	function objetos() {
@@ -25,6 +27,7 @@
 				var objetoUm = Object.keys(objetosBD);
 				var objetoDois = Object.keys(response);
 				objetosBD = response;
+				// Verifica se a quantidade de produtos é a mesma, aí recarrega a página e cria ela novamente 
 				if(objetoUm.length !== objetoDois.length && conta == 1){
 					location.reload(true);
 				}
@@ -36,18 +39,21 @@
 		});
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Cria o html para o produto ser vendido
 	function criaPagina() {
-	    	for (var nomeProduto in objetosBD) {
-	    		var controleInterno = false;
-	    		if(<?php echo $_SESSION['admin']?>){
+	    for (var nomeProduto in objetosBD) {
+			// O controle interno serve para controlar quais produtos aparecem em caxa caixa
+	    	var controleInterno = false;
+			// Para o admin aparecem todos os produtos
+	    	if(<?php echo $_SESSION['admin']?>){
+	    		controleInterno = true;
+	    	} else {
+	    		var stringUsada = "<?php echo $_SESSION['nome']?>";
+	    		if(objetosBD[nomeProduto].caixas.includes(stringUsada.replace(/\D/g, '') + ",")){
 	    			controleInterno = true;
-	    		} else {
-	    			var stringUsada = "<?php echo $_SESSION['nome']?>";
-	    			if(objetosBD[nomeProduto].caixas.includes(stringUsada.replace(/\D/g, '') + ",")){
-	    				controleInterno = true;
-	    			}
 	    		}
-	    		if(controleInterno){
+	    	}
+	    	if(controleInterno){
 				var container = document.getElementById('itens');
 				
 				if (objetosBD.hasOwnProperty(nomeProduto)) {
@@ -68,15 +74,14 @@
 								<span class="quantidade" id="quantidade${nomeProduto}"></span>
 							</center>
 						`;
-
 						container.appendChild(divProduto);
 					}
 				}
 			}
-	    	}
-	    	if(controleInterno){
-		    	var precoFormatado = fmt.format(0);
-		    	
+    	}
+    	if(controleInterno){
+	    	var precoFormatado = fmt.format(0);
+		    
 			document.getElementById('subTotal').textContent = precoFormatado;
 			comandosPagina();
 		}
@@ -84,13 +89,15 @@
 //-----------------------------------------------------------------------------------------------------------------------------//
 	function comandosPagina(){
 		if(body != 0 && body != null){
+			// Pega o array da lista de compras que está selecionada atualmente
 			var elementoSalvo = JSON.parse(localStorage.getItem('elementosString'));
 			elementos = elementoSalvo;
+			
 			
 			for(var nome in elementos){
 				var counter = document.getElementById('counter' + nome);
 				if(counter.value == null){
-				counter.value = 0;
+					counter.value = 0;
 				}
 				valorAtual = parseInt(counter.value) + elementos[nome];
 				
@@ -218,15 +225,15 @@
 	function setar_valores(elementos){
 		const precos = {};
     		for (const key in objetosBD) {
-			if (objetosBD.hasOwnProperty(key)) {
-		    		precos[key] = objetosBD[key].preco;
-			}
+				if (objetosBD.hasOwnProperty(key)) {
+						precos[key] = objetosBD[key].preco;
+				}
     		}
 		
 		localStorage.setItem('elementosString', JSON.stringify(elementos));
 		localStorage.setItem('precosString', JSON.stringify(precos));
 		
-    		var precoFormatado = fmt.format(calcularSubTotal(elementos));
+    	var precoFormatado = fmt.format(calcularSubTotal(elementos));
 		document.getElementById('subTotal').textContent = precoFormatado;
 		document.getElementById('enviaSubTotal').value = calcularSubTotal(elementos);
 	}

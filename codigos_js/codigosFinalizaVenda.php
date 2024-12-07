@@ -269,10 +269,15 @@
 				}
 				//Itens de combo
 				if(recebido == 2){
-					for(var i = 1; i <= (itens * elementos[nomePreco]); i++){
-						imprimir(quantidadeItens[nome].id, nome.toUpperCase(), usuarioPagina.toLowerCase(), nomePreco, (itens * elementos[nomePreco]), i);
+					for(var i = 1; i <= itens; i++){
+						imprimir(quantidadeItens[nome].id, nome.toUpperCase(), usuarioPagina.toLowerCase(), nomePreco, itens, i);
 					}
 				}
+				// if(recebido == 2){
+				// 	for(var i = 1; i <= (itens * elementos[nomePreco]); i++){
+				// 		imprimir(quantidadeItens[nome].id, nome.toUpperCase(), usuarioPagina.toLowerCase(), nomePreco, (itens * elementos[nomePreco]), i);
+				// 	}
+				// }
 			}
 		});
 	}

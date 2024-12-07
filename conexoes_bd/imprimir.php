@@ -10,7 +10,7 @@
 	$pagamento = $_POST['pagamento'];
 	$quantidadeTotal = $_POST['quantidadeTotal'];
 	$quantidadeAtual = $_POST['quantidadeAtual'];
-	$imagem = "saoCristovao.png";
+	$imagem = "escola.jpg";
 	
 	$pagina = "<html><body>";
 	

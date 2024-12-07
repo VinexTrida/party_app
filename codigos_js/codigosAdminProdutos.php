@@ -1,14 +1,20 @@
 <?php?>
 <script>
+	// Mascara jQuery para inputs de valor
 	$('#precoItem').mask("#.##0,00", {reverse: true});
 	$('#precoCadastro').mask("#.##0,00", {reverse: true});
 	$('#precoCombo').mask("#.##0,00", {reverse: true});
+
 	objetos();
+
 	var objetosBD ={};
 	var quantidadeItens = {};
 	var caixasProdutos = {};
 	var selecionado;
+	// Variavel para formatar o estilo do numero e deixar ele no padrão da moeda brasileira (R$0,00)
 	var fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+	// Função que cria um objeto com os todos os dados dos produtos cadastrados no banco de dados
 	function objetos() {
 		$.ajax({
 			url: '../conexoes_bd/objetoBD.php',
@@ -21,14 +27,15 @@
 		});
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Função que cria as divs dos itens
 	function criaPagina(){
 		for (var nomeProduto in objetosBD) {
-			var container = document.getElementById("itens");;
+			var container = document.getElementById("itens");
 			if (objetosBD.hasOwnProperty(nomeProduto)) {
 				// Cria uma div para cada produto
 				var divProduto = document.createElement('div');
 				divProduto.className = 'item';
-				divProduto.id = 'id' + nomeProduto; // Assume que o nome do produto não contém espaços
+				divProduto.id = 'id' + nomeProduto;
 
 				// Conteúdo da div
 				divProduto.innerHTML = `
@@ -52,6 +59,7 @@
 		comandosPagina();
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Função que instancia funções de atualização dá página, uma cada por produto
 	function comandosPagina(){
 		criaListaProdutos();
 		for (var nomeProduto in objetosBD) {
@@ -63,11 +71,13 @@
 		}
 	}
 	
+	// Função que inicia as funções que exigem varias execuções
 	function timer(){
 		atualizarQuantidade();
 		setInterval(atualizarQuantidade, 5000);
 	}
 //-----------------------------------------------------------------------------------------------------------------------------//
+	// Função que 
 	function atualizarCaixas(){
 		$.ajax({
 			url: '../conexoes_bd/consultaCaixasProduto.php',
@@ -75,10 +85,8 @@
 			dataType: "json",
 			success: function (response) {
 				caixasProdutos = response;
-				console.log(response);
 				for(var nomeProdutos in caixasProdutos){
 					var produtos = document.getElementById("caixas"+ nomeProdutos);
-					
 					produtos.innerHTML = `
 						${caixasProdutos[nomeProdutos]}
 					`;
@@ -103,7 +111,7 @@
 				elemento.style.backgroundColor = 'green';
 				alterarVisibilidadeItem(nome, 1);
 			}
-	    	});
+	    });
 	}
 	
 	function alterarVisibilidadeItem(nome, quantidade) {
@@ -197,7 +205,6 @@
 			dataType: "json",      
 			data: { nome: selecionado, quantidade: quantidade },
 			success: function (response) {
-				
 			}
 		});
 	}
@@ -218,7 +225,7 @@
    		document.getElementById('btnpreco' + nomeProduto).addEventListener('click', function() {
    			selecionado = nomeProduto;
    			mostraPreco(1);
-    		});
+    	});
 	}
 	function alterarPreco(){
 		var alteracaoPreco = document.getElementById('precoItem').value;
@@ -299,7 +306,7 @@
 			if (objetosBD.hasOwnProperty(nome)) {
 				var optionObjeto = document.createElement('option');
 				optionObjeto.value = nome;
-           			optionObjeto.id = nome;
+           		optionObjeto.id = nome;
 
 				container.appendChild(optionObjeto);
 			}
@@ -333,7 +340,6 @@
 
 		if(itens.value != "" && numero.value != ''){
 			listaProdutosCombo[itens.value] = numero.value;
-			console.log(listaProdutosCombo);
 			
 			lista.innerHTML += `<span>${itens.value}: ${numero.value}</span><br>`;
 		}
